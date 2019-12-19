@@ -12,10 +12,14 @@ import socket
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    resonse_data = build_response_data()
-    return render_template('index.html', title='Home', resp=resonse_data)
+  """build response data and send page to requester."""
+    response_data = build_response_data()
+    return render_template('index.html', title='Home', resp=response_data)
 
 def build_response_data():
+  """
+  Build a dictionary with timestamp, server ip, server name and requester ip.
+  """
     localhost = socket.gethostname()
     return {
         'now': datetime.now().isoformat(sep=' '),
