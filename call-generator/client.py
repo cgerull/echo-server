@@ -1,12 +1,13 @@
 import http.client
+import os
 
-def send():
-    conn = http.client.HTTPConnection("localhost", 8080)
+
+def send(server = 'localhost'):
+    conn = http.client.HTTPConnection(server, 8080)
     conn.request("GET", "/")
 
     resp = conn.getresponse()
     count = 1
-    # print(resp.status, resp.reason, "\n", resp.read())
 
     while (200 == resp.status):
         conn.request("GET", "/")
@@ -16,7 +17,8 @@ def send():
             print(count)
     
 if __name__ == "__main__":
+    server = os.environ.get('SERVER') or 'localhost'
     try:
-        send()
+        send(server)
     except KeyboardInterrupt:
         pass
