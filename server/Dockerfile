@@ -11,8 +11,10 @@ WORKDIR /home/web
 
 
 ENV PATH=$PATH:/home/web/.local/bin \
+    PORT=8080 \
     ERRLOG=/home/web/log/error.log \
     ACCESSLOG=/home/web/log/access.log \
+    LOGFORMAT="%(h)s %(l)s %(t)s %({Server-IP}o)s %(l)s %(r)s %(s)s %(b)s %(a)s" \
     LOGLVL=INFO
 
 # Install application
@@ -20,4 +22,4 @@ RUN pip3 install --user -r requirements.txt
 
 EXPOSE 8080
 
-CMD gunicorn --bind 0.0.0.0:8080 --access-logfile ${ACCESSLOG} --error-logfile ${ERRLOG} --log-level ${LOGLVL} wsgi:app
+CMD sh run_gunicorn.sh
