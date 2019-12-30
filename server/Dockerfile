@@ -1,7 +1,7 @@
 FROM alpine:3.10
 # Use alpine linux as base image
 
-COPY server/ /home/web/
+COPY . /home/web/
 
 RUN apk add gcc python3 python3-dev libc-dev libffi-dev openssl-dev
 RUN adduser --disabled-password web && mkdir -p /home/web/log/ && chown -R web.web /home/web/
