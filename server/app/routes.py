@@ -3,23 +3,33 @@ Route module for timeconverter web api
 """
 from app import app
 from flask import (request, jsonify, render_template, redirect,
-                   url_for, flash)
+                   url_for, flash, make_response)
 from datetime import datetime
 import socket
 import os
 
 # Modules constants
 secret_file = '/run/secrets/my_secret_key'
-
+localhost = socket.gethostname()
 
 #
 # HTML page
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    """build response data and send page to requester."""
+    """Build response data and send page to requester."""
     response_data = build_response_data()
     return render_template('index.html', title='Home', resp=response_data)
+
+#
+# REST API
+@app.route('/api/echo', methods=['GET'])
+def rest_api():
+    """Build api endpoint and send json response."""
+    resp = make_response(jsonify(build_response_data()))
+    resp.headers['Server-IP'] = socket.gethostbyname(localhost)
+    return resp
+    # return jsonify(build_response_data())
 
 
 def build_response_data():

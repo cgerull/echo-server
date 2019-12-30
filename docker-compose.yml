@@ -22,6 +22,18 @@ services:
         #     retries: 3
         networks:
             - srv-net 
+    call-gen:
+        image: cgerull/demo-call-gen:latest
+        volumes:
+            - srv-logs:/home/web/log
+        networks:
+            - srv-net
+    log-collector:
+        image: cgerull/demo-log-collector:latest
+        volumes:
+            - srv-logs:/home/web/log
+        networks:
+            - srv-net
 volumes:
     srv-logs:
 networks:
