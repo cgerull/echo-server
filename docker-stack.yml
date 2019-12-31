@@ -1,0 +1,86 @@
+---
+    version: "3.1"
+    services:
+        srv:
+            image: cgerull/demo-server:latest
+            environment:
+                - "PORT=8080"
+                - "ERRLOG=/home/web/log/error.log"
+                - "ACCESSLOG=/home/web/log/access.log"
+                - 'LOGFORMAT="%(h)s %(l)s %(t)s %({Server-IP}o)s %(l)s %(r)s %(s)s %(b)s %(a)s"'
+                - "LOGLVL=INFO"
+                - "SECRET_KEY=DockerComposeSecret"
+            ports: 
+                - 8080:8080
+            volumes: 
+                - srv-logs:/home/web/log
+            deploy:
+                replicas: 3
+                resources:
+                    limits:
+                        memory: 100M
+                restart_policy:
+                    condition: on-failure
+                    max_attempts: 3
+                update_config:
+                    parallelism: 1
+                    delay: 10s
+                    failure_action: rollback
+            # healthcheck:
+            #     test: ["CMD", "curl", "-f", "http://localhost"]
+            #     interval: 1m30s
+            #     timeout: 10s
+            #     retries: 3
+            networks:
+                - srv-net 
+        
+        call-gen:
+            image: cgerull/demo-call-gen:latest
+            environment:
+                - "SERVER=srv"
+                - "SRV_PATH=/api/echo"
+                - "PORT=8080"
+                - "LOGFILE=/home/web/log/call-gen.log"
+            volumes:
+                - srv-logs:/home/web/log
+            deploy:
+                replicas: 1
+                resources:
+                    limits:
+                        memory: 10M
+                restart_policy:
+                    condition: on-failure
+                    max_attempts: 3
+                update_config:
+                    parallelism: 1
+                    delay: 5s
+                    failure_action: rollback
+            networks:
+                - srv-net
+
+        log-collector:
+            image: cgerull/demo-log-collector:latest
+            environment:
+                - "ERRLOG=/home/web/log/error.log"
+                - "ACCESSLOG=/home/web/log/access.log"
+            volumes:
+                - srv-logs:/home/web/log
+            deploy:
+                replicas: 1
+                resources:
+                    limits:
+                        memory: 100M
+                restart_policy:
+                    condition: on-failure
+                    max_attempts: 3
+                update_config:
+                    parallelism: 1
+                    delay: 5s
+                    failure_action: rollback
+            networks:
+                - srv-net
+
+    volumes:
+        srv-logs:
+    networks:
+        srv-net:
