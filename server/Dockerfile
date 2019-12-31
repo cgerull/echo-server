@@ -15,7 +15,8 @@ ENV PATH=$PATH:/home/web/.local/bin \
     ERRLOG=/home/web/log/error.log \
     ACCESSLOG=/home/web/log/access.log \
     LOGFORMAT="%(h)s %(l)s %(t)s %({Server-IP}o)s %(l)s %(r)s %(s)s %(b)s %(a)s" \
-    LOGLVL=INFO
+    LOGLVL=INFO \
+    SECRET_KEY=DockerFileSecret
 
 # Install application
 RUN pip3 install --user -r requirements.txt

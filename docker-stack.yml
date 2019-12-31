@@ -9,6 +9,7 @@
                 - "ACCESSLOG=/home/web/log/access.log"
                 - 'LOGFORMAT="%(h)s %(l)s %(t)s %({Server-IP}o)s %(l)s %(r)s %(s)s %(b)s %(a)s"'
                 - "LOGLVL=INFO"
+                - "SECRET_KEY=DockerComposeSecret"
             ports: 
                 - 8080:8080
             volumes: 
@@ -17,7 +18,7 @@
                 replicas: 3
                 resources:
                     limits:
-                        memory: 500M
+                        memory: 100M
                 restart_policy:
                     condition: on-failure
                     max_attempts: 3
@@ -46,7 +47,7 @@
                 replicas: 1
                 resources:
                     limits:
-                        memory: 100M
+                        memory: 10M
                 restart_policy:
                     condition: on-failure
                     max_attempts: 3
