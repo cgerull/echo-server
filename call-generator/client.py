@@ -53,7 +53,7 @@ def send(server = 'localhost', srv_path = '/', port=8080):
 
 if __name__ == "__main__":
     server = os.environ.get('SERVER') or 'localhost'
-    srv_path = os.environ.get('SRV_PATH') or '/api/echo'
+    srv_path = os.environ.get('SRV_PATH') or '/'
     port= os.environ.get('PORT') or 8080
     logfile = os.environ.get('LOGFILE') or ''
     logger = init_logger(logfile)
