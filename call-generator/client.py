@@ -28,8 +28,11 @@ def init_logger(logfile):
 def send(server = 'localhost', srv_path = '/', port=8080):
     """Send requests endlessly"""
     logger.info("Connecing to {}{}".format(server, srv_path))
+    headers = {
+        'User-Agent': 'Call-gen V0.1'
+    }
     conn = http.client.HTTPConnection(server, port)
-    conn.request("GET", srv_path)
+    conn.request("GET", srv_path, headers=headers)
     resp = conn.getresponse()
     count = 1
     t0 = time.time() # Set start time
@@ -38,7 +41,7 @@ def send(server = 'localhost', srv_path = '/', port=8080):
     logger.info("Starting endless loop")
     while (200 == resp.status):
         try:
-            conn.request("GET", srv_path)
+            conn.request("GET", srv_path, headers=headers)
             resp = conn.getresponse()
             count += 1
             if (0 == count % 1000):
