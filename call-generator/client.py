@@ -1,5 +1,7 @@
 import http.client
+import socket
 import os
+import sys
 import logging
 import time
 
@@ -16,7 +18,7 @@ def init_logger(logfile):
         logger.addHandler(fh)
     # create console handler with a higher log level
     ch = logging.StreamHandler()
-    ch.setLevel(logging.ERROR)
+    ch.setLevel(logging.INFO)
     ch.setFormatter(formatter)
     logger.addHandler(ch)
 
@@ -26,8 +28,11 @@ def init_logger(logfile):
 def send(server = 'localhost', srv_path = '/', port=8080):
     """Send requests endlessly"""
     logger.info("Connecing to {}{}".format(server, srv_path))
+    headers = {
+        'User-Agent': 'Call-gen V0.1'
+    }
     conn = http.client.HTTPConnection(server, port)
-    conn.request("GET", srv_path)
+    conn.request("GET", srv_path, headers=headers)
     resp = conn.getresponse()
     count = 1
     t0 = time.time() # Set start time
@@ -36,7 +41,7 @@ def send(server = 'localhost', srv_path = '/', port=8080):
     logger.info("Starting endless loop")
     while (200 == resp.status):
         try:
-            conn.request("GET", srv_path)
+            conn.request("GET", srv_path, headers=headers)
             resp = conn.getresponse()
             count += 1
             if (0 == count % 1000):
@@ -45,11 +50,21 @@ def send(server = 'localhost', srv_path = '/', port=8080):
                 t1 = t
                 if ( 0 == count % 10000):
                     logger.info("Send {} requests in {} seconds with an average of {} req/s".format(count, round(t - t0,3), round(count/(t - t0),3)))
-
+        
+        except socket.gaierror as e:
+            logger.error("Caught socket gaierror {} going to retry".format(e))
+        except socket.timeout:
+            logger.error("Caught socket timeout. Going to retry now.")
+            conn = http.client.HTTPConnection(server, port)
+        except http.client.NotConnected as e:
+            logger.error("Caught socket timeout. Going to retry now.")
+            conn = http.client.HTTPConnection(server, port) 
         except Exception as e:
-            logger.error("Caught exception {}".format(e))
+            logger.error("Unknown exception, trying to reconnect {}".format(e))
+            conn = http.client.HTTPConnection(server, port)
+            # sys,exit(1)
             # logger.error("Get Address info error")
-            break
+
 
 if __name__ == "__main__":
     server = os.environ.get('SERVER') or 'localhost'
@@ -57,6 +72,7 @@ if __name__ == "__main__":
     port= os.environ.get('PORT') or 8080
     logfile = os.environ.get('LOGFILE') or ''
     logger = init_logger(logfile)
+    logger.info("Start call-generator for {} on path {}".format(server, srv_path))
 
     try:
         send(server, srv_path)
