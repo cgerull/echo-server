@@ -13,4 +13,5 @@ WORKDIR /home/web
 ENV PATH=$PATH:/home/web/.local/bin \
     SERVER=server
 
-CMD python3 client.py
+ENTRYPOINT [ "python3" ]
+CMD ["client.py"]

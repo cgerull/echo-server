@@ -19,7 +19,9 @@ localhost = socket.gethostname()
 def index():
     """Build response data and send page to requester."""
     response_data = build_response_data()
-    return render_template('index.html', title='Home', resp=response_data)
+    resp = make_response(render_template('index.html', title='Home', resp=response_data))
+    resp.headers['Server-IP'] = socket.gethostbyname(localhost)
+    return resp
 
 #
 # REST API
@@ -29,7 +31,6 @@ def rest_api():
     resp = make_response(jsonify(build_response_data()))
     resp.headers['Server-IP'] = socket.gethostbyname(localhost)
     return resp
-    # return jsonify(build_response_data())
 
 
 def build_response_data():

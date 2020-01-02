@@ -1,5 +1,7 @@
 import http.client
+import socket
 import os
+import sys
 import logging
 import time
 
@@ -45,9 +47,19 @@ def send(server = 'localhost', srv_path = '/', port=8080):
                 t1 = t
                 if ( 0 == count % 10000):
                     logger.info("Send {} requests in {} seconds with an average of {} req/s".format(count, round(t - t0,3), round(count/(t - t0),3)))
-
+        
+        except socket.gaierror as e:
+            logger.error("Caught socket gaierror {} going to retry".format(e))
+        except socket.timeout:
+            logger.error("Caught socket timeout. Going to retry now.")
+            conn = http.client.HTTPConnection(server, port)
+        except http.client.NotConnected as e:
+            logger.error("Caught socket timeout. Going to retry now.")
+            conn = http.client.HTTPConnection(server, port) 
         except Exception as e:
-            logger.error("Caught exception {}".format(e))
+            logger.error("Unknown exception, trying to reconnect {}".format(e))
+            conn = http.client.HTTPConnection(server, port)
+            # sys,exit(1)
             # logger.error("Get Address info error")
 
 

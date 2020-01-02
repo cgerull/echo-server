@@ -3,7 +3,7 @@ FROM alpine:3.10
 
 COPY . /home/web/
 
-RUN apk add gcc python3 python3-dev libc-dev libffi-dev openssl-dev
+RUN apk add gcc python3 python3-dev libc-dev libffi-dev openssl-dev curl
 RUN adduser --disabled-password web && mkdir -p /home/web/log/ && chown -R web.web /home/web/
 
 USER web
