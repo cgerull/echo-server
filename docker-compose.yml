@@ -15,47 +15,44 @@ services:
             - "LOGLVL=INFO"
             - "SECRET_KEY=DockerComposeSecret"
         volumes: 
-            - srv-logs:/home/web/log
-        # deploy:
-        #     replicas: 3
-        #     # resources:
-        #     #     limits:
-        #     #         memory: 500M
-        #     # restart_policy:
-        #     #     condition: on-failure
-        #     #     max_attempts: 3
+            - app-logs:/home/web/log
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost"]
+            test: ["CMD", "curl", "-f", "http://localhost:8080/api/echo"]
             interval: 1m30s
             timeout: 10s
             retries: 3
         networks:
-            - srv-net 
+            - local-net 
     call-gen:
         image: call-gen:latest
         build: 
             context: ./call-generator
+        depends_on: 
+            - srv
+            - log-collector
         environment:
             - "SERVER=srv"
             - "SRV_PATH=/api/echo"
             - "PORT=8080"
             - "LOGFILE=/home/web/log/call-gen.log"
         volumes:
-            - srv-logs:/home/web/log
+            - app-logs:/home/web/log
         networks:
-            - srv-net
+            - local-net
     log-collector:
         image: collector:latest
         build: 
-            context: ./call-generator
+            context: ./log-collector
+        ports: 
+            - 8081:8081
         environment:
             - "ERRLOG=/home/web/log/error.log"
             - "ACCESSLOG=/home/web/log/access.log"
         volumes:
-            - srv-logs:/home/web/log
+            - app-logs:/home/web/log
         networks:
-            - srv-net
+            - local-net
 volumes:
-    srv-logs:
+    app-logs:
 networks:
-    srv-net:
+    local-net:

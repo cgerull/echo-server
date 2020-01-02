@@ -16,7 +16,7 @@ def init_logger(logfile):
         logger.addHandler(fh)
     # create console handler with a higher log level
     ch = logging.StreamHandler()
-    ch.setLevel(logging.ERROR)
+    ch.setLevel(logging.INFO)
     ch.setFormatter(formatter)
     logger.addHandler(ch)
 
@@ -49,7 +49,7 @@ def send(server = 'localhost', srv_path = '/', port=8080):
         except Exception as e:
             logger.error("Caught exception {}".format(e))
             # logger.error("Get Address info error")
-            break
+
 
 if __name__ == "__main__":
     server = os.environ.get('SERVER') or 'localhost'
@@ -57,6 +57,7 @@ if __name__ == "__main__":
     port= os.environ.get('PORT') or 8080
     logfile = os.environ.get('LOGFILE') or ''
     logger = init_logger(logfile)
+    logger.info("Start call-generator for {} on path {}".format(server, srv_path))
 
     try:
         send(server, srv_path)
