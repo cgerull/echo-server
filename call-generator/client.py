@@ -27,12 +27,18 @@ def init_logger(logfile):
 
 def send(server = 'localhost', srv_path = '/', port=8080):
     """Send requests endlessly"""
-    logger.info("Connecing to {}{}".format(server, srv_path))
+    logger.info("Connecing to http://{}:{}{}".format(server, port, srv_path))
     headers = {
-        'User-Agent': 'Call-gen V0.1'
+        'User-Agent': 'Call-gen 0.2'
     }
+    connected = False
     conn = http.client.HTTPConnection(server, port)
-    conn.request("GET", srv_path, headers=headers)
+    while (not connected):
+        try:
+            conn.request("GET", srv_path, headers=headers)
+            connected = True
+        except socket.gaierror as e:
+            logger.error("Initial connection caught {}; retrying.".format(e))
     resp = conn.getresponse()
     count = 1
     t0 = time.time() # Set start time

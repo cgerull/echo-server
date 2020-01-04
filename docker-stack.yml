@@ -13,7 +13,7 @@
             ports: 
                 - 8080:8080
             volumes: 
-                - srv-logs:/home/web/log
+                - app-logs:/home/web/log
             deploy:
                 replicas: 3
                 resources:
@@ -26,13 +26,13 @@
                     parallelism: 1
                     delay: 10s
                     failure_action: rollback
-            # healthcheck:
-            #     test: ["CMD", "curl", "-f", "http://localhost"]
-            #     interval: 1m30s
-            #     timeout: 10s
-            #     retries: 3
+            healthcheck:
+                test: ["CMD", "curl", "-f", "http://localhost:8080/api/echo"]
+                interval: 1m30s
+                timeout: 10s
+                retries: 3
             networks:
-                - srv-net 
+                - local-net 
         
         call-gen:
             image: cgerull/demo-call-gen:latest
@@ -42,7 +42,7 @@
                 - "PORT=8080"
                 - "LOGFILE=/home/web/log/call-gen.log"
             volumes:
-                - srv-logs:/home/web/log
+                - app-logs:/home/web/log
             deploy:
                 replicas: 1
                 resources:
@@ -56,15 +56,17 @@
                     delay: 5s
                     failure_action: rollback
             networks:
-                - srv-net
+                - local-net
 
         log-collector:
             image: cgerull/demo-log-collector:latest
             environment:
                 - "ERRLOG=/home/web/log/error.log"
                 - "ACCESSLOG=/home/web/log/access.log"
+            ports: 
+                - 8081:8081
             volumes:
-                - srv-logs:/home/web/log
+                - app-logs:/home/web/log
             deploy:
                 replicas: 1
                 resources:
@@ -78,9 +80,9 @@
                     delay: 5s
                     failure_action: rollback
             networks:
-                - srv-net
+                - local-net
 
     volumes:
-        srv-logs:
+        app-logs:
     networks:
-        srv-net:
+        local-net:
