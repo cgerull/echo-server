@@ -19,8 +19,8 @@ build:
   script:
     - echo ${CI_COMMIT_SHORT_SHA}
     - echo ${BUILD_VERSION}
-    - for image in echo-server log-collector call-generator
-      do
-        docker build -t ${CCTP_REGISTRY}/ccv/tp/support/$image:${BUILD_VERSION} ./$image
-        docker push ${CCTP_REGISTRY}/ccv/tp/support/$image:${BUILD_VERSION}
-      done
+    - for image in echo-server log-collector call-generator;
+      do;
+        docker build -t ${CCTP_REGISTRY}/ccv/tp/support/$image:${BUILD_VERSION} ./$image;
+        docker push ${CCTP_REGISTRY}/ccv/tp/support/$image:${BUILD_VERSION};
+      done;
