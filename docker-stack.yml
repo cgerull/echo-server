@@ -2,7 +2,7 @@
     version: "3.1"
     services:
         srv:
-            image: cgerull/demo-server:latest
+            image: ccv/tp/support/echo-server:0.5.0.c527f7ee
             environment:
                 - "PORT=8080"
                 - "ERRLOG=/home/web/log/error.log"
@@ -35,7 +35,7 @@
                 - local-net 
         
         call-gen:
-            image: cgerull/demo-call-gen:latest
+            image: ccv/tp/support/demo-call-gen:0.5.0.c527f7ee
             environment:
                 - "SERVER=srv"
                 - "SRV_PATH=/api/echo"
@@ -59,7 +59,7 @@
                 - local-net
 
         log-collector:
-            image: cgerull/demo-log-collector:latest
+            image: ccv/tp/support/demo-log-collector:0.5.0.c527f7ee
             environment:
                 - "ERRLOG=/home/web/log/error.log"
                 - "ACCESSLOG=/home/web/log/access.log"
