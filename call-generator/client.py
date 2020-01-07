@@ -27,7 +27,8 @@ def init_logger(logfile):
 
 def send(server = 'localhost', srv_path = '/', port=8080):
     """Send requests endlessly"""
-    logger.info("Connecing to http://{}:{}{}".format(server, port, srv_path))
+    logger.info("Connecting to http://{}:{}{}".format(server, port, srv_path))
+    logger.info("Address info {}".format(socket.getaddrinfo(server, port)))
     headers = {
         'User-Agent': 'Call-gen 0.2'
     }
