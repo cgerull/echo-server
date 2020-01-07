@@ -2,7 +2,7 @@
     version: "3.1"
     services:
         srv:
-            image: cgerull/demo-server:latest
+            image: cgerull/echo-server:latest
             environment:
                 - "PORT=8080"
                 - "ERRLOG=/home/web/log/error.log"
@@ -35,7 +35,7 @@
                 - local-net 
         
         call-gen:
-            image: cgerull/demo-call-gen:latest
+            image: cgerull/call-generator:latest
             environment:
                 - "SERVER=srv"
                 - "SRV_PATH=/api/echo"
@@ -43,6 +43,7 @@
                 - "LOGFILE=/home/web/log/call-gen.log"
             volumes:
                 - app-logs:/home/web/log
+            command: ''
             deploy:
                 replicas: 1
                 resources:
@@ -50,7 +51,7 @@
                         memory: 10M
                 restart_policy:
                     condition: on-failure
-                    max_attempts: 3
+                    max_attempts: 8
                 update_config:
                     parallelism: 1
                     delay: 5s
@@ -59,7 +60,7 @@
                 - local-net
 
         log-collector:
-            image: cgerull/demo-log-collector:latest
+            image: cgerull/log-collector:latest
             environment:
                 - "ERRLOG=/home/web/log/error.log"
                 - "ACCESSLOG=/home/web/log/access.log"
