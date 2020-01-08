@@ -9,7 +9,9 @@ Use the docker-compose file to build and run the client server demo locally.
 For swarm testing use the docker-stack.yml configuration. Change to the image value to use your own, customized images.
 
 In Swarm mode you need to add a secret with:
-```
+
+```bash
+
 echo SwarmEtcdSecret | docker secret create my_secret_key -
 ```
 
@@ -40,7 +42,7 @@ Send a GET request with your favorite REST client (cUrl, insomnia, postman).
 
 ```bash
 
-curl http://192.168.99.109:8080/api/echo 
+curl http://192.168.99.109:8080/api/echo
 {"container_name":"d89af7728f6d","local_ip":"10.0.18.3","now":"2020-01-08 11:53:24.647791","remote_ip":"10.255.0.2","secret":"SwarmEtcdSecret\n"}
 ```
 
@@ -58,7 +60,6 @@ Configuration by setting environment variables.
 "SECRET_KEY=DockerComposeSecret"
 ```
 
-
 ## Call-generator
 
 For performance testing or call log generation the call-generator container can be used.
@@ -69,6 +70,7 @@ It will create an endless stream of HTTP requests to the configured URL.
 Configuration by setting environment variables.
 
 ```bash
+
 "SERVER=srv"
 "SRV_PATH=/api/echo"
 "PORT=8080"
@@ -78,4 +80,3 @@ Configuration by setting environment variables.
 ## ToDo
 
 - Make path on log volume configurable.
-
