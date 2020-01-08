@@ -14,10 +14,10 @@ services:
             - 8080:8080
         volumes: 
             - app-logs:/home/web/log
+        secrets:
+            - my_secret_key
         deploy:
             replicas: 3
-            secrets:
-                - my_secret_key
             resources:
                 limits:
                     memory: 100M
@@ -45,10 +45,10 @@ services:
             - "LOGFILE=/home/web/log/call-gen.log"
         volumes:
             - app-logs:/home/web/log
+        secrets:
+            - my_secret_key
         deploy:
             replicas: 1
-            secrets:
-                - my_secret_key
             resources:
                 limits:
                     memory: 10M

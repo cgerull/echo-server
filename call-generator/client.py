@@ -35,10 +35,12 @@ def send(server = 'localhost', srv_path = '/', port=8080):
     conn = http.client.HTTPConnection(server, port)
     while (not connected):
         try:
+            logger.info("Address info for {} {}".format(server, socket.getaddrinfo(server, port)))
             conn.request("GET", srv_path, headers=headers)
             connected = True
         except socket.gaierror as e:
             logger.error("Initial connection caught {}; retrying.".format(e))
+            time.sleep(5)
     resp = conn.getresponse()
     count = 1
     t0 = time.time() # Set start time
@@ -68,8 +70,6 @@ def send(server = 'localhost', srv_path = '/', port=8080):
         except Exception as e:
             logger.error("Unknown exception, trying to reconnect {}".format(e))
             conn = http.client.HTTPConnection(server, port)
-            # sys,exit(1)
-            # logger.error("Get Address info error")
 
 
 if __name__ == "__main__":
