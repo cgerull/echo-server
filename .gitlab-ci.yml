@@ -9,7 +9,7 @@ variables:
   DOCKER_REGISTRY: 'cm-registry.ccveu.local:5000'
   CCTP_REGISTRY: 'cm-registry.ccveu.local:5002'
   BUILD_TAG: '0.5.0'
-  BUILD_VERSION: "${BUILD_TAG}.${CI_COMMIT_SHORT_SHA}"
+  BUILD_VERSION: "latest"
   GIT_SUBMODULE_STRATEGY: recursive
 
 image: ${DOCKER_REGISTRY}/cm/docker-gitlab-images/gitlab-dind-make:latest
@@ -17,6 +17,8 @@ image: ${DOCKER_REGISTRY}/cm/docker-gitlab-images/gitlab-dind-make:latest
 build:
   stage: build
   script:
+    - echo "Branch ${CI_COMMIT_REF_NAME}"
+    - echo "Tag ${CI_COMMIT_TAG}"
     - docker build -t ${CCTP_REGISTRY}/ccv/tp/support/echo-server:${BUILD_VERSION} ./echo-server
     - docker push ${CCTP_REGISTRY}/ccv/tp/support/echo-server:${BUILD_VERSION}
     - docker build -t ${CCTP_REGISTRY}/ccv/tp/support/call-generator:${BUILD_VERSION} ./call-generator
