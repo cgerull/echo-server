@@ -40,6 +40,7 @@ def send(server = 'localhost', srv_path = '/', port=8080):
             connected = True
         except socket.gaierror as e:
             logger.error("Initial connection caught {}; retrying.".format(e))
+            time.sleep(5)
     resp = conn.getresponse()
     count = 1
     t0 = time.time() # Set start time
