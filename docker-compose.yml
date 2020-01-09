@@ -1,15 +1,58 @@
 ---
 version: "3.1"
 services:
-    demo-server:
-        image: demoserver:0.1
+    srv:
+        image: server:latest
+        build: 
+            context: ./server
         ports: 
             - 8080:8080
+        environment:
+            - "PORT=8080"
+            - "ERRLOG=/home/web/log/error.log"
+            - "ACCESSLOG=/home/web/log/access.log"
+            - 'LOGFORMAT="%(h)s %(l)s %(t)s %({Server-IP}o)s %(l)s %(r)s %(s)s %(b)s %(a)s"'
+            - "LOGLVL=INFO"
+            - "SECRET_KEY=DockerComposeSecret"
         volumes: 
-            - srv-logs:/home/web/log
-        deploy:
-            replicas: 2
+            - app-logs:/home/web/log
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8080/api/echo"]
+            interval: 1m30s
+            timeout: 10s
+            retries: 3
+        networks:
+            - local-net 
+    call-gen:
+        image: call-gen:latest
+        build: 
+            context: ./call-generator
+        depends_on: 
+            - srv
+            - log-collector
+        environment:
+            - "SERVER=srv"
+            - "SRV_PATH=/api/echo"
+            - "PORT=8080"
+            - "LOGFILE=/home/web/log/call-gen.log"
+        volumes:
+            - app-logs:/home/web/log
+        networks:
+            - local-net
+    log-collector:
+        image: collector:latest
+        build: 
+            context: ./log-collector
+        ports: 
+            - 8081:8081
+        environment:
+            - "ERRLOG=/home/web/log/error.log"
+            - "ACCESSLOG=/home/web/log/access.log"
+        volumes:
+            - app-logs:/home/web/log
+        networks:
+            - local-net
 volumes:
-    srv-logs:
+    app-logs:
 networks:
-    demo-net:
+    local-net:
