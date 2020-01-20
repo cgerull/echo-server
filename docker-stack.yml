@@ -19,7 +19,7 @@ services:
         configs:
             - srv-config
         deploy:
-            replicas: 3
+            replicas: 1
             resources:
                 limits:
                     memory: 100M
