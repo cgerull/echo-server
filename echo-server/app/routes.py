@@ -10,6 +10,11 @@ import os
 
 # Modules constants
 secret_file = '/run/secrets/my_secret_key'
+srv_config = '/srv-config'
+config = {
+    'title': 'Echo Webserver',
+    'footer': 'Default configuration'
+}
 localhost = socket.gethostname()
 
 #
@@ -19,7 +24,7 @@ localhost = socket.gethostname()
 def index():
     """Build response data and send page to requester."""
     response_data = build_response_data()
-    resp = make_response(render_template('index.html', title='Home', resp=response_data))
+    resp = make_response(render_template('index.html', title=config.title, footer=config.footer, resp=response_data))
     resp.headers['Server-IP'] = socket.gethostbyname(localhost)
     return resp
 
@@ -49,12 +54,34 @@ def build_response_data():
 
 
 def get_secret_key():
-        secret = ''
+    secret = ''
+    try:
+        f = open(secret_file, 'r')
+        secret = f.read()
+    except:
+        # no file, just return empty string
+        secret = os.environ.get('SECRET_KEY') or 'Only_the_default_secret_key'
+    
+    return secret
+
+
+def get_config():
+    try:
+        cf = open('/srv-config', r)
+        if cf.readable():
+            config = read_config('/srv-config')
+    except Exception as exc:
+        print("Can't open configuration file. {}".format(exc))
+
+
+def read_config(config_file):
+    result = {}
+    with open(config_file, 'r') as stream:
         try:
-            f = open(secret_file, 'r')
-            secret = f.read()
-        except:
-            # no file, just return empty string
-            secret = os.environ.get('SECRET_KEY') or 'Only_the_default_secret_key'
-        
-        return secret
+            config_data = (yaml.safe_load(stream))
+            for key in config_data.keys():
+                result[key] = config_data[key]
+            
+        except yaml.YAMLError as exc:
+            print("Can't read configuration. {}".format(exc))
+    return(result)

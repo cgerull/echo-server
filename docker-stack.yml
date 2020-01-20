@@ -16,6 +16,8 @@ services:
             - app-logs:/home/web/log
         secrets:
             - my_secret_key
+        configs:
+            - srv-config
         deploy:
             replicas: 3
             resources:
@@ -93,4 +95,6 @@ networks:
 secrets:
     my_secret_key:
         external: true
-        
+configs:
+    srv-conf:
+        file: ./echo-server/srv-conf.yml
