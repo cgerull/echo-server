@@ -39,7 +39,7 @@ services:
             - local-net 
     
     call-gen:
-        image: ccv/tp/support/call-gen:latest
+        image: cm-registry.ccveu.local:5002/ccv/tp/support/call-generator:latest
         environment:
             - "SERVER=srv"
             - "SRV_PATH=/api/echo"
@@ -65,7 +65,7 @@ services:
             - local-net
 
     log-collector:
-        image: ccv/tp/support/log-collector:latest
+        image: cm-registry.ccveu.local:5002/ccv/tp/support/log-collector:latest
         environment:
             - "ERRLOG=/home/web/log/error.log"
             - "ACCESSLOG=/home/web/log/access.log"
@@ -96,5 +96,5 @@ secrets:
     my_secret_key:
         external: true
 configs:
-    srv-conf:
-        file: ./echo-server/srv-conf.yml
+    srv-config:
+        file: ./echo-server/srv-config.yml
