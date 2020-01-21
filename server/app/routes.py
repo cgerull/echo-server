@@ -7,11 +7,12 @@ from flask import (request, jsonify, render_template, redirect,
 from datetime import datetime
 import socket
 import os
+import yaml
 
 # Modules constants
 secret_file = '/run/secrets/my_secret_key'
-srv_config = '/srv-config'
-config = {
+config_file = '/srv-config'
+srv_config = {
     'title': 'Echo Webserver',
     'footer': 'Default configuration'
 }
@@ -24,16 +25,27 @@ localhost = socket.gethostname()
 def index():
     """Build response data and send page to requester."""
     response_data = build_response_data()
-    resp = make_response(render_template('index.html', title=config.title, footer=config.footer, resp=response_data))
+    resp = make_response(render_template('index.html', title=srv_config['title'], footer=srv_config['footer'], resp=response_data))
     resp.headers['Server-IP'] = socket.gethostbyname(localhost)
     return resp
+
 
 #
 # REST API
 @app.route('/api/echo', methods=['GET'])
-def rest_api():
-    """Build api endpoint and send json response."""
+def api_echo():
+    """Build api endpoint for echo data."""
     resp = make_response(jsonify(build_response_data()))
+    resp.headers['Server-IP'] = socket.gethostbyname(localhost)
+    return resp
+
+
+#
+# REST API
+@app.route('/api/config', methods=['GET'])
+def api_config():
+    """Build api endpoint for config data."""
+    resp = make_response(jsonify(read_config(config_file, srv_config)))
     resp.headers['Server-IP'] = socket.gethostbyname(localhost)
     return resp
 
@@ -65,22 +77,22 @@ def get_secret_key():
     return secret
 
 
-def get_config():
-    try:
-        cf = open('/srv-config', r)
-        if cf.readable():
-            config = read_config('/srv-config')
-    except Exception as exc:
-        print("Can't open configuration file. {}".format(exc))
+# def get_config(cf_file):
+#     try:
+#         cf = open(cf_file, r)
+#         if cf.readable():
+#             config = read_config('/srv-config')
+#     except Exception as exc:
+#         print("Can't open configuration file. {}".format(exc))
 
 
-def read_config(config_file):
+def read_config(config_file, srv_config):
     result = {}
     with open(config_file, 'r') as stream:
         try:
             config_data = (yaml.safe_load(stream))
             for key in config_data.keys():
-                result[key] = config_data[key]
+                srv_config[key] = config_data[key]
             
         except yaml.YAMLError as exc:
             print("Can't read configuration. {}".format(exc))
