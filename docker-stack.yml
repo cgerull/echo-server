@@ -11,7 +11,7 @@ services:
             - "LOGLVL=INFO"
             - "SECRET_KEY=DockerComposeSecret"
         ports: 
-            - 8080:8080
+            - 8080:8080/tcp
         volumes: 
             - app-logs:/home/web/log
         secrets:
@@ -70,7 +70,7 @@ services:
             - "ERRLOG=/home/web/log/error.log"
             - "ACCESSLOG=/home/web/log/access.log"
         ports: 
-            - 8081:8081
+            - 8081:8081/tcp
         volumes:
             - app-logs:/home/web/log
         deploy:
@@ -97,4 +97,4 @@ secrets:
         external: true
 configs:
     srv-config:
-        file: ./echo-server/srv-config.yml
+        file: ./server/srv-config.yml
