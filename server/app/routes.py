@@ -95,5 +95,5 @@ def read_config(config_file, srv_config):
             config_data = (yaml.safe_load(stream))
             for key in config_data.keys():
                 srv_config[key] = config_data[key]   
-    except yaml.YAMLError as exc:
+    except Exception as exc:
         print("Can't read configuration. {}".format(exc))
