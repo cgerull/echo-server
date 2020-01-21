@@ -17,7 +17,7 @@ variables:
   vmImageName: 'ubuntu-latest'
 
   # Environment name
-  environmentName: ''
+  environmentName: 'echo-cgerull'
 
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)/server
@@ -44,7 +44,7 @@ stages:
         python -m pip install --upgrade pip
         pip install setup
         pip install -r requirements.txt
-      workingDirectory: $(projectRoot)
+      workingDirectory: $(projectRoot)/server
       displayName: "Install requirements"
 
     - task: ArchiveFiles@2
