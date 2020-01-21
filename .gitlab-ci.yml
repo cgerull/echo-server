@@ -19,7 +19,7 @@ build:
   script:
     - echo "Branch ${CI_COMMIT_REF_NAME}"
     - echo "Tag ${CI_COMMIT_TAG}"
-    - docker build -t ${CCTP_REGISTRY}/ccv/tp/support/echo-server:${BUILD_VERSION} ./echo-server
+    - docker build -t ${CCTP_REGISTRY}/ccv/tp/support/echo-server:${BUILD_VERSION} ./server
     - docker push ${CCTP_REGISTRY}/ccv/tp/support/echo-server:${BUILD_VERSION}
     - docker build -t ${CCTP_REGISTRY}/ccv/tp/support/call-generator:${BUILD_VERSION} ./call-generator
     - docker push ${CCTP_REGISTRY}/ccv/tp/support/call-generator:${BUILD_VERSION}
