@@ -24,6 +24,7 @@ localhost = socket.gethostname()
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     """Build response data and send page to requester."""
+    read_config(config_file, srv_config)
     response_data = build_response_data()
     resp = make_response(render_template('index.html', title=srv_config['title'], footer=srv_config['footer'], resp=response_data))
     resp.headers['Server-IP'] = socket.gethostbyname(localhost)
@@ -45,7 +46,8 @@ def api_echo():
 @app.route('/api/config', methods=['GET'])
 def api_config():
     """Build api endpoint for config data."""
-    resp = make_response(jsonify(read_config(config_file, srv_config)))
+    read_config(config_file, srv_config)
+    resp = make_response(jsonify(srv_config))
     resp.headers['Server-IP'] = socket.gethostbyname(localhost)
     return resp
 
