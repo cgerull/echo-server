@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
 trigger:
-- master
+- development
 
 variables:
   # Azure Resource Manager connection created during pipeline creation
@@ -20,7 +20,7 @@ variables:
   environmentName: ''
 
   # Project root folder. Point to the folder containing manage.py file.
-  projectRoot: $(System.DefaultWorkingDirectory)
+  projectRoot: $(System.DefaultWorkingDirectory)/server
   
   # Python version: 3.7
   pythonVersion: '3.7'
