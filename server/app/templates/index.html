@@ -2,7 +2,7 @@
 <!-- {% import 'bootstrap/wtf.html' as wtf %} -->
 
 {% block app_content %}
-    <h1>Welcome to the demo webserver</h1>
+    <h1>Welcome to {{ title }}</h1>
     <p>
         Local server time is {{ resp.now }}<br>
         The server ip is: {{ resp.local_ip }}<br>

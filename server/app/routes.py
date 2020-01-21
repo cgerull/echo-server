@@ -66,6 +66,12 @@ def build_response_data():
 
 
 def get_secret_key():
+    """
+    Return secret key from:
+        Docker secret file or
+        Environment variable SECRET_KEY or
+        a default value
+    """
     secret = ''
     try:
         f = open(secret_file, 'r')
@@ -73,27 +79,21 @@ def get_secret_key():
     except:
         # no file, just return empty string
         secret = os.environ.get('SECRET_KEY') or 'Only_the_default_secret_key'
-    
     return secret
 
 
-# def get_config(cf_file):
-#     try:
-#         cf = open(cf_file, r)
-#         if cf.readable():
-#             config = read_config('/srv-config')
-#     except Exception as exc:
-#         print("Can't open configuration file. {}".format(exc))
-
-
 def read_config(config_file, srv_config):
-    result = {}
-    with open(config_file, 'r') as stream:
-        try:
+    """
+    Read configuration from file and update srv_config dictionary.
+    If no config file exists, a default configuration is used.
+    Args:
+        configuration file
+        configuration dictonary
+    """
+    try:
+        with open(config_file, 'r') as stream:
             config_data = (yaml.safe_load(stream))
             for key in config_data.keys():
-                srv_config[key] = config_data[key]
-            
-        except yaml.YAMLError as exc:
-            print("Can't read configuration. {}".format(exc))
-    return(result)
+                srv_config[key] = config_data[key]   
+    except yaml.YAMLError as exc:
+        print("Can't read configuration. {}".format(exc))
