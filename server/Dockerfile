@@ -1,4 +1,4 @@
-FROM alpine:3.10
+FROM alpine:3.11
 # Use alpine linux as base image
 
 COPY . /home/web/
@@ -22,5 +22,11 @@ ENV PATH=$PATH:/home/web/.local/bin \
 RUN pip3 install --user -r requirements.txt
 
 EXPOSE 8080
+
+RUN apk add --no-cache ca-certificates && update-ca-certificates && \
+    wget -O /microscanner https://get.aquasec.com/microscanner && \
+    chmod +x /microscanner && \
+    /microscanner ${TOKEN} && \
+    rm -rf /microscanner
 
 CMD sh run_gunicorn.sh

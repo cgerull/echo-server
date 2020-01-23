@@ -1,8 +1,15 @@
 ---
+<<<<<<< HEAD
 version: "3.7"
 services:
     srv:
         image: cm-registry.ccveu.local:5002/ccv/tp/support/echo-server:latest
+=======
+version: "3.1"
+services:
+    srv:
+        image: cgerull/echo-server:latest
+>>>>>>> 09961b5
         environment:
             - "PORT=8080"
             - "ERRLOG=/home/web/log/error.log"
@@ -11,15 +18,24 @@ services:
             - "LOGLVL=INFO"
             - "SECRET_KEY=DockerComposeSecret"
         ports: 
+<<<<<<< HEAD
             - 8080:8080/tcp
+=======
+            - 8080:8080
+>>>>>>> 09961b5
         volumes: 
             - app-logs:/home/web/log
         secrets:
             - my_secret_key
+<<<<<<< HEAD
         configs:
             - srv-config
         deploy:
             replicas: 1
+=======
+        deploy:
+            replicas: 3
+>>>>>>> 09961b5
             resources:
                 limits:
                     memory: 100M
@@ -39,7 +55,11 @@ services:
             - local-net 
     
     call-gen:
+<<<<<<< HEAD
         image: cm-registry.ccveu.local:5002/ccv/tp/support/call-generator:latest
+=======
+        image: cgerull/call-generator:latest
+>>>>>>> 09961b5
         environment:
             - "SERVER=srv"
             - "SRV_PATH=/api/echo"
@@ -47,8 +67,12 @@ services:
             - "LOGFILE=/home/web/log/call-gen.log"
         volumes:
             - app-logs:/home/web/log
+<<<<<<< HEAD
         secrets:
             - my_secret_key
+=======
+        command: ''
+>>>>>>> 09961b5
         deploy:
             replicas: 1
             resources:
@@ -56,7 +80,11 @@ services:
                     memory: 10M
             restart_policy:
                 condition: on-failure
+<<<<<<< HEAD
                 max_attempts: 3
+=======
+                max_attempts: 8
+>>>>>>> 09961b5
             update_config:
                 parallelism: 1
                 delay: 5s
@@ -65,14 +93,26 @@ services:
             - local-net
 
     log-collector:
+<<<<<<< HEAD
         image: cm-registry.ccveu.local:5002/ccv/tp/support/log-collector:latest
+=======
+        image: cgerull/log-collector:latest
+>>>>>>> 09961b5
         environment:
             - "ERRLOG=/home/web/log/error.log"
             - "ACCESSLOG=/home/web/log/access.log"
         ports: 
+<<<<<<< HEAD
             - 8081:8081/tcp
         volumes:
             - app-logs:/home/web/log
+=======
+            - 8081:8081
+        volumes:
+            - app-logs:/home/web/log
+        secrets:
+            - my_secret_key
+>>>>>>> 09961b5
         deploy:
             replicas: 1
             resources:
@@ -80,7 +120,11 @@ services:
                     memory: 100M
             restart_policy:
                 condition: on-failure
+<<<<<<< HEAD
                 # max_attempts: 3
+=======
+                max_attempts: 3
+>>>>>>> 09961b5
             update_config:
                 parallelism: 1
                 delay: 5s
@@ -94,7 +138,11 @@ networks:
     local-net:
 secrets:
     my_secret_key:
+<<<<<<< HEAD
         external: true
 configs:
     srv-config:
         file: ./server/srv-config.yml
+=======
+        external: true
+>>>>>>> 09961b5
