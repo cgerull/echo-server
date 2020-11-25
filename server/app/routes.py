@@ -11,7 +11,7 @@ import yaml
 
 # Modules constants
 secret_file = '/run/secrets/my_secret_key'
-config_file = '/srv-config'
+config_file = 'srv-config.yml'
 srv_config = {
     'title': 'Echo Webserver',
     'footer': 'Default configuration'
