@@ -7,9 +7,15 @@ from flask import (request, jsonify, render_template, redirect,
 from datetime import datetime
 import socket
 import os
+import yaml
 
 # Modules constants
 secret_file = '/run/secrets/my_secret_key'
+config_file = '/srv-config'
+srv_config = {
+    'title': 'Echo Webserver',
+    'footer': 'Default configuration'
+}
 localhost = socket.gethostname()
 
 #
@@ -18,17 +24,30 @@ localhost = socket.gethostname()
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     """Build response data and send page to requester."""
+    read_config(config_file, srv_config)
     response_data = build_response_data()
-    resp = make_response(render_template('index.html', title='Home', resp=response_data))
+    resp = make_response(render_template('index.html', title=srv_config['title'], footer=srv_config['footer'], resp=response_data))
     resp.headers['Server-IP'] = socket.gethostbyname(localhost)
     return resp
+
 
 #
 # REST API
 @app.route('/api/echo', methods=['GET'])
-def rest_api():
-    """Build api endpoint and send json response."""
+def api_echo():
+    """Build api endpoint for echo data."""
     resp = make_response(jsonify(build_response_data()))
+    resp.headers['Server-IP'] = socket.gethostbyname(localhost)
+    return resp
+
+
+#
+# REST API
+@app.route('/api/config', methods=['GET'])
+def api_config():
+    """Build api endpoint for config data."""
+    read_config(config_file, srv_config)
+    resp = make_response(jsonify(srv_config))
     resp.headers['Server-IP'] = socket.gethostbyname(localhost)
     return resp
 
@@ -49,12 +68,34 @@ def build_response_data():
 
 
 def get_secret_key():
-        secret = ''
-        try:
-            f = open(secret_file, 'r')
-            secret = f.read()
-        except:
-            # no file, just return empty string
-            secret = os.environ.get('SECRET_KEY') or 'Only_the_default_secret_key'
-        
-        return secret
+    """
+    Return secret key from:
+        Docker secret file or
+        Environment variable SECRET_KEY or
+        a default value
+    """
+    secret = ''
+    try:
+        f = open(secret_file, 'r')
+        secret = f.read()
+    except:
+        # no file, just return empty string
+        secret = os.environ.get('SECRET_KEY') or 'Only_the_default_secret_key'
+    return secret
+
+
+def read_config(config_file, srv_config):
+    """
+    Read configuration from file and update srv_config dictionary.
+    If no config file exists, a default configuration is used.
+    Args:
+        configuration file
+        configuration dictonary
+    """
+    try:
+        with open(config_file, 'r') as stream:
+            config_data = (yaml.safe_load(stream))
+            for key in config_data.keys():
+                srv_config[key] = config_data[key]   
+    except Exception as exc:
+        print("Can't read configuration. {}".format(exc))
