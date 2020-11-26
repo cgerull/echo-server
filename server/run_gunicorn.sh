@@ -4,6 +4,6 @@
     --bind="0.0.0.0:${PORT}" \
     --workers=2 \
     --access-logformat="${LOGFORMAT}" \
-    --access-logfile="${ACCESSLOG}" \
-    --error-logfile="${ERRLOG}" \
+    --access-logfile="-" \
+    --error-logfile="-" \
     --log-level="${LOGLVL}"

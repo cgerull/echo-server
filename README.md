@@ -53,8 +53,6 @@ Configuration by setting environment variables.
 ```bash
 
 "PORT=8080"
-"ERRLOG=/home/web/log/error.log"
-"ACCESSLOG=/home/web/log/access.log"
 'LOGFORMAT="%(h)s %(l)s %(t)s %({Server-IP}o)s %(l)s %(r)s %(s)s %(b)s %(a)s"'
 "LOGLVL=INFO"
 "SECRET_KEY=DockerComposeSecret"
@@ -74,7 +72,7 @@ Configuration by setting environment variables.
 "SERVER=srv"
 "SRV_PATH=/api/echo"
 "PORT=8080"
-"LOFILE=/home/web/log/call-gen.log"
+"LOGFILE=/home/web/log/call-gen.log"
 ```
 
 ## ToDo
