@@ -2,13 +2,11 @@
   tags:
     - docker
     - linux
-    - ansible
-    - swarm
 
 variables:
   DOCKER_REGISTRY: 'cm-registry.ccveu.local:5000'
   CCTP_REGISTRY: 'cm-registry.ccveu.local:5002'
-  BUILD_TAG: '0.5.0'
+  BUILD_TAG: '1.1
   BUILD_VERSION: "latest"
   GIT_SUBMODULE_STRATEGY: recursive
 
