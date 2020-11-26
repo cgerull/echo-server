@@ -35,7 +35,7 @@ def send(server = 'localhost', srv_path = '/', port=8080):
     conn = http.client.HTTPConnection(server, port)
     while (not connected):
         try:
-            logger.info("Address info {}".format(socket.getaddrinfo(server, port)))
+            logger.info("Address info for {} {}".format(server, socket.getaddrinfo(server, port)))
             conn.request("GET", srv_path, headers=headers)
             connected = True
         except socket.gaierror as e:
@@ -70,8 +70,6 @@ def send(server = 'localhost', srv_path = '/', port=8080):
         except Exception as e:
             logger.error("Unknown exception, trying to reconnect {}".format(e))
             conn = http.client.HTTPConnection(server, port)
-            # sys,exit(1)
-            # logger.error("Get Address info error")
 
 
 if __name__ == "__main__":
