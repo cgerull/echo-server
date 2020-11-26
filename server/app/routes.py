@@ -96,6 +96,10 @@ def read_config(config_file, srv_config):
         with open(config_file, 'r') as stream:
             config_data = (yaml.safe_load(stream))
             for key in config_data.keys():
-                srv_config[key] = config_data[key]   
+                srv_config[key] = config_data[key]
+    # Don't print an error on missing configuration 
+    # Filter with
+    except FileNotFoundError:
+        pass   
     except Exception as exc:
         print("Can't read configuration. {}".format(exc))
